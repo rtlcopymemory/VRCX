@@ -24,30 +24,30 @@ jobs:
                   echo "version=${FILENAME}" >> $GITHUB_OUTPUT
                   echo "date=${DATE}" >> $GITHUB_OUTPUT
 
-    build_dotnet_windows:
-        runs-on: windows-latest
-        needs: set_version
+    # build_dotnet_windows:
+    #     runs-on: windows-latest
+    #     needs: set_version
 
-        steps:
-            - uses: actions/checkout@v4
+    #     steps:
+    #         - uses: actions/checkout@v4
 
-            - name: Setup .NET 9
-              uses: actions/setup-dotnet@v4
-              with:
-                  dotnet-version: '9.0.x'
-            - name: Set version
-              run: |
-                  echo "${{ needs.set_version.outputs.version }}" > Version
-                  cat Version
-            - name: Build Cef .NET Application
-              run: dotnet build Dotnet\VRCX-Cef.csproj -p:Configuration=Release -p:Platform=AnyCPU -p:RestorePackagesConfig=true -t:"Restore;Clean;Build" -m --self-contained
-            - name: Build DB Merger
-              run: dotnet build DBMerger\DBMerger.csproj -p:Configuration=Release -p:Platform=AnyCPU -p:RestorePackagesConfig=true -t:"Restore;Clean;Build" -m --self-contained
-            - name: Upload Cef dotnet artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: Cef-Release
-                  path: build/Cef
+    #         - name: Setup .NET 9
+    #           uses: actions/setup-dotnet@v4
+    #           with:
+    #               dotnet-version: '9.0.x'
+    #         - name: Set version
+    #           run: |
+    #               echo "${{ needs.set_version.outputs.version }}" > Version
+    #               cat Version
+    #         - name: Build Cef .NET Application
+    #           run: dotnet build Dotnet\VRCX-Cef.csproj -p:Configuration=Release -p:Platform=AnyCPU -p:RestorePackagesConfig=true -t:"Restore;Clean;Build" -m --self-contained
+    #         - name: Build DB Merger
+    #           run: dotnet build DBMerger\DBMerger.csproj -p:Configuration=Release -p:Platform=AnyCPU -p:RestorePackagesConfig=true -t:"Restore;Clean;Build" -m --self-contained
+    #         - name: Upload Cef dotnet artifacts
+    #           uses: actions/upload-artifact@v4
+    #           with:
+    #               name: Cef-Release
+    #               path: build/Cef
 
     build_dotnet_linux:
         runs-on: ubuntu-latest
@@ -115,7 +115,8 @@ jobs:
     create_setup:
         runs-on: ubuntu-latest
         needs:
-            [set_version, build_node, build_dotnet_windows, build_dotnet_linux]
+            # [set_version, build_node, build_dotnet_windows, build_dotnet_linux]
+            [set_version, build_node, build_dotnet_linux]
 
         steps:
             - uses: actions/checkout@v4
@@ -137,16 +138,16 @@ jobs:
               with:
                   name: Cef-html
                   path: build/Cef/html
-            - name: Create nsis installer
-              uses: joncloud/makensis-action@v4
-              with:
-                  script-file: Installer/installer.nsi
-                  additional-plugin-paths: Installer/Plugins
-            - name: Rename setup
-              run: |
-                  file_name="VRCX_${{ needs.set_version.outputs.version }}_Setup.exe"
-                  echo "Setup FileName: ${file_name}"
-                  mv Installer/VRCX_Setup.exe $file_name
+            # - name: Create nsis installer
+            #   uses: joncloud/makensis-action@v4
+            #   with:
+            #       script-file: Installer/installer.nsi
+            #       additional-plugin-paths: Installer/Plugins
+            # - name: Rename setup
+            #   run: |
+            #       file_name="VRCX_${{ needs.set_version.outputs.version }}_Setup.exe"
+            #       echo "Setup FileName: ${file_name}"
+            #       mv Installer/VRCX_Setup.exe $file_name
             - name: Make zip
               run: |
                   file_name="VRCX_${{ needs.set_version.outputs.version }}.zip"
@@ -154,11 +155,11 @@ jobs:
                   7z a -tzip ${file_name} * -mx=7 -xr0!*.log
                   mv ${file_name} ../../${file_name}
                   echo "Zip FileName: ${file_name}"
-            - name: Upload Setup artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: VRCX-Setup
-                  path: 'VRCX_${{ needs.set_version.outputs.version }}_Setup.exe'
+            # - name: Upload Setup artifact
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #       name: VRCX-Setup
+            #       path: 'VRCX_${{ needs.set_version.outputs.version }}_Setup.exe'
             - name: Upload Zip artifact
               uses: actions/upload-artifact@v4
               with:
