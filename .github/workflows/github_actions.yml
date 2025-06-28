@@ -128,11 +128,11 @@ jobs:
               run: sudo apt update && sudo apt install -y p7zip-full nsis nsis-pluginapi
             - name: Set plugin permissions
               run: sudo chown -R $(whoami) /usr/share/nsis/Plugins/
-            - name: Download Cef dotnet artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: Cef-Release
-                  path: build/Cef
+            # - name: Download Cef dotnet artifacts
+            #   uses: actions/download-artifact@v4
+            #   with:
+            #       name: Cef-Release
+            #       path: build/Cef
             - name: Download Cef-html artifacts
               uses: actions/download-artifact@v4
               with:
