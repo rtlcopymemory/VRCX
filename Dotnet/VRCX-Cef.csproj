@@ -47,7 +47,7 @@
     <CefSharpExcludeSubProcessExe>true</CefSharpExcludeSubProcessExe>
   </PropertyGroup>
   <PropertyGroup>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-arm64</RuntimeIdentifier>
     <SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
   </PropertyGroup>
   <PropertyGroup>
